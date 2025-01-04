@@ -130,6 +130,32 @@ public class Contract {
     public void setNotificari(List<Notificare> notificari) {
         this.notificari = notificari;
     }
+    public enum StareContract {
+        ACTIV, INACTIV, ANULAT
+    }
+
+    @Column(name = "stare", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StareContract stare;
+
+    // Getter și Setter pentru stare
+    public StareContract getStare() {
+        return stare;
+    }
+
+    public void setStare(StareContract stare) {
+        this.stare = stare;
+    }
+
+    // Metodă pentru verificarea contractelor active
+    public boolean esteActiv() {
+        return this.stare == StareContract.ACTIV;
+    }
+
+    // Metodă pentru setarea contractului ca anulat
+    public void anuleazaContract() {
+        this.stare = StareContract.ANULAT;
+    }
 
     // Metode suplimentare pentru funcționalitate
     public boolean expiraIn(int zile) {
