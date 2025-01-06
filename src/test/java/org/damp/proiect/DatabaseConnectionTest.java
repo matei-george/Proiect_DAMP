@@ -1,6 +1,7 @@
 package org.damp.proiect;
 
 import org.damp.proiect.Service.implementari.BeneficiarService;
+import org.damp.proiect.Service.interfete.IContractService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class BeneficiarController {
 
     @Autowired
-    private IBeneficiarService beneficiarService;
+    public IBeneficiarService beneficiarService;
 
     @GetMapping("/list")
     public ResponseEntity<List<BeneficiarDTO>> getAllBeneficiari() {
@@ -27,16 +27,20 @@ public class BeneficiarController {
         return ResponseEntity.ok(beneficiariDTO);
     }
 
-    @PostMapping("/creare")
+    @PostMapping("/creare-cont")
     public ResponseEntity<BeneficiarDTO> creareCont(@RequestBody BeneficiarDTO beneficiarDTO) {
-        Beneficiar beneficiar = BeneficiarMapper.toEntity(beneficiarDTO);
-        Beneficiar createdBeneficiar = beneficiarService.creazaCont(
-                beneficiar.getEmail(),
-                beneficiar.getTelefon(),
-                beneficiar.getParola() // Parola nu este inclusă în DTO; se poate adăuga dacă este necesar.
+        Beneficiar beneficiar = beneficiarService.creazaCont(
+                beneficiarDTO.getNume(),
+                beneficiarDTO.getPrenume(),
+                beneficiarDTO.getEmail(),
+                beneficiarDTO.getTelefon(),
+                beneficiarDTO.getCnp(),
+                beneficiarDTO.getParola(),
+                beneficiarDTO.getAdresa()
         );
-        return ResponseEntity.ok(BeneficiarMapper.toDTO(createdBeneficiar));
+        return ResponseEntity.ok(BeneficiarMapper.toDTO(beneficiar));
     }
+
 
     @PutMapping("/{id}/adauga-date")
     public ResponseEntity<BeneficiarDTO> adaugaDateBeneficiar(@PathVariable Long id, @RequestBody BeneficiarDTO beneficiarDTO) {
@@ -60,5 +64,16 @@ public class BeneficiarController {
     public ResponseEntity<Void> stergeCont(@PathVariable Long id) {
         beneficiarService.stergeContBeneficiar(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{id}/istoric-notificari")
+    public ResponseEntity<String> getIstoricNotificari(@PathVariable Long id) {
+        String istoricNotificari = beneficiarService.getIstoricNotificariById(id);
+        return ResponseEntity.ok(istoricNotificari);
+    }
+
+    @PostMapping("/{id}/adauga-notificare")
+    public ResponseEntity<Void> adaugaNotificareLaIstoric(@PathVariable Long id, @RequestBody String notificare) {
+        beneficiarService.adaugaNotificareLaIstoric(id, notificare);
+        return ResponseEntity.ok().build();
     }
 }

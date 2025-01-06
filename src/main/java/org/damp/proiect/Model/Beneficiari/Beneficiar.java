@@ -44,6 +44,10 @@ public class Beneficiar {
     @OneToMany(mappedBy = "beneficiar", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Notificare> notificare;
 
+    @Lob
+    @Column(name = "istoric_notificari")
+    private String istoricNotificari; // Atribut pentru istoricul notificărilor
+
     // Constructori, Getteri și Setteri
     public Beneficiar() {
     }
@@ -57,8 +61,6 @@ public class Beneficiar {
         this.cnp = cnp;
         this.parola = parola;
     }
-
-    // Getteri și Setteri pentru toate atributele
 
     public Long getIdBeneficiar() {
         return id;
@@ -124,4 +126,11 @@ public class Beneficiar {
         this.parola = parola;
     }
 
+    public String getIstoricNotificari() {
+        return istoricNotificari;
+    }
+
+    public void setIstoricNotificari(String istoricNotificari) {
+        this.istoricNotificari = istoricNotificari;
+    }
 }

@@ -8,6 +8,7 @@ import org.damp.proiect.Repository.BeneficiarRepository;
 import org.damp.proiect.Repository.ContractRepository;
 import org.damp.proiect.Repository.FurnizorRepository;
 import org.damp.proiect.Repository.NotificareRepository;
+import org.damp.proiect.Service.interfete.IContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ContractService {
+public class ContractService implements IContractService {
 
     @Autowired
     private ContractRepository contractRepository;

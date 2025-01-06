@@ -2,6 +2,7 @@ package org.damp.proiect.Service.implementari;
 
 import org.damp.proiect.Model.Serviciu.Serviciu;
 import org.damp.proiect.Repository.ServiciuRepository;
+import org.damp.proiect.Service.interfete.IServiciuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ServiciuService {
+public class ServiciuService implements IServiciuService {
 
     @Autowired
     private ServiciuRepository serviciuRepository;

@@ -1,5 +1,6 @@
 package org.damp.proiect.Service.implementari;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.damp.proiect.Model.Beneficiari.Beneficiar;
 import org.damp.proiect.Repository.BeneficiarRepository;
 import org.damp.proiect.Service.interfete.IBeneficiarService;
@@ -19,17 +20,21 @@ public class BeneficiarService implements IBeneficiarService {
     // Creare cont beneficiar
     @Transactional
     @Override
-    public Beneficiar creazaCont(String email, String telefon, String parola) {
-        if (beneficiarRepository.findByEmail(email).isPresent() || beneficiarRepository.findByTelefon(telefon).isPresent()) {
-            throw new RuntimeException("Email sau numar de telefon deja utilizat!");
-        }
-
+    public Beneficiar creazaCont(String nume, String prenume, String email, String telefon, String cnp, String parola, String adresa) {
         Beneficiar beneficiar = new Beneficiar();
+        beneficiar.setNume(nume);
+        beneficiar.setPrenume(prenume);
         beneficiar.setEmail(email);
         beneficiar.setTelefon(telefon);
+        beneficiar.setCnp(cnp);
         beneficiar.setParola(parola);
-        beneficiarRepository.save(beneficiar);
-        return beneficiar;
+        beneficiar.setAdresa(adresa);
+        return beneficiarRepository.save(beneficiar);
+    }
+
+    @Override
+    public Beneficiar creazaCont(String email, String telefon, String parola) {
+        return null;
     }
 
     // Adăugare date beneficiar (după crearea contului)
@@ -102,5 +107,23 @@ public class BeneficiarService implements IBeneficiarService {
     @Override
     public List<Beneficiar> getAllBeneficiari() {
         return beneficiarRepository.findAll();
+    }
+
+    @Override
+    public String getIstoricNotificariById(Long id) {
+        Beneficiar beneficiar = beneficiarRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Beneficiarul nu a fost găsit"));
+        return beneficiar.getIstoricNotificari();
+    }
+
+    public void adaugaNotificareLaIstoric(Long beneficiarId, String notificare) {
+        Beneficiar beneficiar = beneficiarRepository.findById(beneficiarId)
+                .orElseThrow(() -> new EntityNotFoundException("Beneficiarul nu a fost găsit"));
+
+        String istoricCurent = beneficiar.getIstoricNotificari();
+        String notificareActualizata = (istoricCurent == null) ? notificare : istoricCurent + "\n" + notificare;
+
+        beneficiar.setIstoricNotificari(notificareActualizata);
+        beneficiarRepository.save(beneficiar);
     }
 }

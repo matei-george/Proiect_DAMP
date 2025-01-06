@@ -2,6 +2,7 @@ package org.damp.proiect.Service.implementari;
 
 import org.damp.proiect.Model.Furnizor.Furnizor;
 import org.damp.proiect.Repository.FurnizorRepository;
+import org.damp.proiect.Service.interfete.IFurnizorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class FurnizorService {
+public class FurnizorService implements IFurnizorService {
 
     @Autowired
     private FurnizorRepository furnizorRepository;

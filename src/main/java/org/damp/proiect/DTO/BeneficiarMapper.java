@@ -5,26 +5,26 @@ import org.damp.proiect.Model.Beneficiari.Beneficiar;
 
 public class BeneficiarMapper {
 
-    // Conversie din Beneficiar în BeneficiarDTO
     public static BeneficiarDTO toDTO(Beneficiar beneficiar) {
-        return new BeneficiarDTO(
-                beneficiar.getIdBeneficiar(),
-                beneficiar.getNume(),
-                beneficiar.getPrenume(),
-                beneficiar.getEmail(),
-                beneficiar.getTelefon(),
-                beneficiar.getAdresa()
-        );
+        BeneficiarDTO dto = new BeneficiarDTO();
+        dto.setNume(beneficiar.getNume());
+        dto.setPrenume(beneficiar.getPrenume());
+        dto.setEmail(beneficiar.getEmail());
+        dto.setTelefon(beneficiar.getTelefon());
+        dto.setCnp(beneficiar.getCnp());
+        dto.setParola(beneficiar.getParola());
+        dto.setAdresa(beneficiar.getAdresa());
+        return dto;
     }
 
-    // Conversie din BeneficiarDTO în Beneficiar
     public static Beneficiar toEntity(BeneficiarDTO dto) {
         Beneficiar beneficiar = new Beneficiar();
-        beneficiar.setIdBeneficiar(dto.getId());
         beneficiar.setNume(dto.getNume());
         beneficiar.setPrenume(dto.getPrenume());
         beneficiar.setEmail(dto.getEmail());
         beneficiar.setTelefon(dto.getTelefon());
+        beneficiar.setCnp(dto.getCnp());
+        beneficiar.setParola(dto.getParola());
         beneficiar.setAdresa(dto.getAdresa());
         return beneficiar;
     }

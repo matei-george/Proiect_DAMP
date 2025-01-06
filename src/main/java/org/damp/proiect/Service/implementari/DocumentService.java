@@ -2,6 +2,7 @@ package org.damp.proiect.Service.implementari;
 
 import org.damp.proiect.Model.Document.Document;
 import org.damp.proiect.Repository.DocumentRepository;
+import org.damp.proiect.Service.interfete.IDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class DocumentService {
+public class DocumentService implements IDocumentService {
 
     @Autowired
     private DocumentRepository documentRepository;

@@ -1,12 +1,16 @@
 package org.damp.proiect.Service.interfete;
 
 import org.damp.proiect.Model.Beneficiari.Beneficiar;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface IBeneficiarService {
 
     // Creare cont beneficiar
+    @Transactional
+    Beneficiar creazaCont(String nume, String prenume, String email, String telefon, String cnp, String parola, String adresa);
+
     Beneficiar creazaCont(String email, String telefon, String parola);
 
     // Adăugare date beneficiar
@@ -26,4 +30,11 @@ public interface IBeneficiarService {
 
     // Obținerea tuturor beneficiarilor
     List<Beneficiar> getAllBeneficiari();
+
+    // Obținerea istoricului notificărilor
+    String getIstoricNotificariById(Long id);
+
+    // Adăugare notificare la istoric
+    void adaugaNotificareLaIstoric(Long id, String notificare);
+
 }

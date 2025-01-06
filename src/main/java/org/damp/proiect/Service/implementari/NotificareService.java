@@ -2,6 +2,7 @@ package org.damp.proiect.Service.implementari;
 
 import org.damp.proiect.Model.Notificare.Notificare;
 import org.damp.proiect.Repository.NotificareRepository;
+import org.damp.proiect.Service.interfete.INotificareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class NotificareService {
+public class NotificareService implements INotificareService {
 
     @Autowired
     private NotificareRepository notificareRepository;

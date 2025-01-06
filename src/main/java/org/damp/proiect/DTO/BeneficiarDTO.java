@@ -6,8 +6,9 @@ public class BeneficiarDTO {
     private String prenume;
     private String email;
     private String telefon;
+    private String cnp;
+    private String parola;
     private String adresa;
-
     // Constructori
     public BeneficiarDTO() {}
 
@@ -67,5 +68,21 @@ public class BeneficiarDTO {
 
     public void setAdresa(String adresa) {
         this.adresa = adresa;
+    }
+
+    public void setCnp(String cnp) {
+        this.cnp=cnp;
+    }
+
+    public String getCnp() {
+        return cnp;
+    }
+
+    public String getParola() {
+        return parola;
+    }
+
+    public void setParola(String parola) {
+        this.parola=parola;
     }
 }

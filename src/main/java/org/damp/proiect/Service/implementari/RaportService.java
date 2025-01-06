@@ -2,6 +2,7 @@ package org.damp.proiect.Service.implementari;
 
 import org.damp.proiect.Model.Raport.Raport;
 import org.damp.proiect.Repository.RaportRepository;
+import org.damp.proiect.Service.interfete.IRaportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class RaportService {
+public class RaportService implements IRaportService {
 
     @Autowired
     private RaportRepository raportRepository;
