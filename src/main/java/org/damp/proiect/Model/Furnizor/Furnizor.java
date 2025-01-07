@@ -71,4 +71,8 @@ public class Furnizor {
     public boolean oferaServiciu(String serviciu) {
         return this.tipServiciu.equalsIgnoreCase(serviciu);
     }
+
+    public Long getIdFurnizor() {
+        return id;
+    }
 }

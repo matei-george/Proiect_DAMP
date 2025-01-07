@@ -19,4 +19,6 @@ public interface IContractService {
 
     void genereazaNotificariReinnoire();
     Contract getContractById(Long id);
+
+    Contract creareContract(Contract contract, Long beneficiarId, Long furnizorId);
 }

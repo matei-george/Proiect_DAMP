@@ -44,6 +44,18 @@ public class ContractService implements IContractService {
                 .orElseThrow(() -> new RuntimeException("Contract cu ID-ul " + id + " nu a fost găsit!"));
     }
 
+    @Transactional
+    public Contract creareContract(Contract contract, Long beneficiarId, Long furnizorId) {
+        Beneficiar beneficiar = beneficiarRepository.findById(beneficiarId)
+                .orElseThrow(() -> new RuntimeException("Beneficiar inexistent!"));
+        Furnizor furnizor = furnizorRepository.findById(furnizorId)
+                .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
+
+        contract.setBeneficiar(beneficiar); // Asociază beneficiarul
+        contract.setFurnizor(furnizor);    // Asociază furnizorul
+        return contractRepository.save(contract);
+    }
+
     // Obținerea tuturor contractelor
     public List<Contract> getAllContracts() {
         return contractRepository.findAll();
