@@ -18,7 +18,7 @@ public class Contract {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_beneficiar")
+    @JoinColumn(name = "id_beneficiar", nullable = false)
     private Beneficiar beneficiar;
 
     @ManyToOne
@@ -29,9 +29,11 @@ public class Contract {
     private String tipServiciu;
 
     @Column(name = "data_incepere", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date dataIncepere;
 
     @Column(name = "data_expirare", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date dataExpirare;
 
     @Column(name = "valoare_contract")
@@ -43,10 +45,19 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Notificare> notificari;
 
-    // Constructor implicit și parametrizat
+    @Column(name = "stare", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StareContract stare;
+
+    public enum StareContract {
+        ACTIV, INACTIV, ANULAT
+    }
+
+    // Constructor implicit
     public Contract() {
     }
 
+    // Constructor parametrizat
     public Contract(Beneficiar beneficiar, Furnizor furnizor, String tipServiciu, Date dataIncepere, Date dataExpirare, Double valoareContract, String documente) {
         this.beneficiar = beneficiar;
         this.furnizor = furnizor;
@@ -55,10 +66,10 @@ public class Contract {
         this.dataExpirare = dataExpirare;
         this.valoareContract = valoareContract;
         this.documente = documente;
+        this.stare = StareContract.ACTIV; // Stare implicită
     }
 
-    // Getteri și Setteri pentru toate atributele
-
+    // Getteri și Setteri
     public Long getId() {
         return id;
     }
@@ -130,15 +141,7 @@ public class Contract {
     public void setNotificari(List<Notificare> notificari) {
         this.notificari = notificari;
     }
-    public enum StareContract {
-        ACTIV, INACTIV, ANULAT
-    }
 
-    @Column(name = "stare", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private StareContract stare;
-
-    // Getter și Setter pentru stare
     public StareContract getStare() {
         return stare;
     }
@@ -147,26 +150,23 @@ public class Contract {
         this.stare = stare;
     }
 
-    // Metodă pentru verificarea contractelor active
+    // Metode suplimentare
     public boolean esteActiv() {
         return this.stare == StareContract.ACTIV;
     }
 
-    // Metodă pentru setarea contractului ca anulat
     public void anuleazaContract() {
         this.stare = StareContract.ANULAT;
     }
 
-    // Metode suplimentare pentru funcționalitate
     public boolean expiraIn(int zile) {
-        Date today = new Date();
-        long diferenta = dataExpirare.getTime() - today.getTime();
-        long zileRestante = diferenta / (1000 * 60 * 60 * 24);
-        return zileRestante <= zile;
+        long diferenta = dataExpirare.getTime() - new Date().getTime();
+        long zileRamase = diferenta / (1000 * 60 * 60 * 24);
+        return zileRamase <= zile;
     }
 
-    public void adaugareDocument(String document) {
-        if (this.documente == null) {
+    public void adaugaDocument(String document) {
+        if (this.documente == null || this.documente.isEmpty()) {
             this.documente = document;
         } else {
             this.documente += ", " + document;
