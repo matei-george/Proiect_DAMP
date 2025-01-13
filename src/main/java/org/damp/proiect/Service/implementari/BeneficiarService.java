@@ -6,6 +6,7 @@ import org.damp.proiect.Repository.BeneficiarRepository;
 import org.damp.proiect.Service.interfete.IBeneficiarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,6 +18,10 @@ public class BeneficiarService implements IBeneficiarService {
     @Autowired
     private BeneficiarRepository beneficiarRepository;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Creare cont beneficiar
     @Transactional
     @Override
@@ -27,7 +32,7 @@ public class BeneficiarService implements IBeneficiarService {
         beneficiar.setEmail(email);
         beneficiar.setTelefon(telefon);
         beneficiar.setCnp(cnp);
-        beneficiar.setParola(parola);
+        beneficiar.setParola(passwordEncoder.encode(parola)); // Hash parolei
         beneficiar.setAdresa(adresa);
         return beneficiarRepository.save(beneficiar);
     }
