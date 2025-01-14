@@ -5,75 +5,68 @@ import org.damp.proiect.DTO.BeneficiarMapper;
 import org.damp.proiect.Model.Beneficiari.Beneficiar;
 import org.damp.proiect.Service.interfete.IBeneficiarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/beneficiari")
+@Controller
+@RequestMapping("/beneficiari")
 public class BeneficiarController {
 
     @Autowired
     public IBeneficiarService beneficiarService;
 
-    @GetMapping("/list")
-    public ResponseEntity<List<BeneficiarDTO>> getAllBeneficiari() {
+    // Afișează pagina de Beneficiari cu Thymeleaf
+    @GetMapping
+    public String beneficiariPage(Model model) {
         List<Beneficiar> beneficiari = beneficiarService.getAllBeneficiari();
-        List<BeneficiarDTO> beneficiariDTO = beneficiari.stream()
-                .map(BeneficiarMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(beneficiariDTO);
+        model.addAttribute("beneficiari", beneficiari != null ? beneficiari : List.of());
+        return "beneficiari"; // Returnează beneficiari.html
     }
-
+    // Endpoint pentru crearea unui beneficiar (folosit de formularul HTML)
     @PostMapping("/creare-cont")
-    public ResponseEntity<BeneficiarDTO> creareCont(@RequestBody BeneficiarDTO beneficiarDTO) {
-        Beneficiar beneficiar = beneficiarService.creazaCont(
-                beneficiarDTO.getNume(),
-                beneficiarDTO.getPrenume(),
-                beneficiarDTO.getEmail(),
-                beneficiarDTO.getTelefon(),
-                beneficiarDTO.getCnp(),
-                beneficiarDTO.getParola(),
-                beneficiarDTO.getAdresa()
-        );
-        return ResponseEntity.ok(BeneficiarMapper.toDTO(beneficiar));
+    public String creareBeneficiar(
+            @RequestParam String nume,
+            @RequestParam String prenume,
+            @RequestParam String email,
+            @RequestParam String telefon,
+            @RequestParam String cnp,
+            @RequestParam String parola,
+            @RequestParam String adresa) {
+        beneficiarService.creazaCont(nume, prenume, email, telefon, cnp, parola, adresa);
+        return "redirect:/beneficiari"; // Redirecționează către lista beneficiarilor după crearea cu succes
     }
 
-
-    @PutMapping("/{id}/adauga-date")
-    public ResponseEntity<BeneficiarDTO> adaugaDateBeneficiar(@PathVariable Long id, @RequestBody BeneficiarDTO beneficiarDTO) {
-        Beneficiar beneficiar = beneficiarService.adaugaDateBeneficiar(
-                id,
-                beneficiarDTO.getNume(),
-                beneficiarDTO.getPrenume(),
-                null, // CNP-ul nu este inclus în DTO
-                beneficiarDTO.getAdresa()
-        );
-        return ResponseEntity.ok(BeneficiarMapper.toDTO(beneficiar));
+    @PostMapping("/adauga-date")
+    public String adaugaDateBeneficiar(
+            @RequestParam Long id,
+            @RequestParam(required = false) String nume,
+            @RequestParam(required = false) String prenume,
+            @RequestParam(required = false) String telefon,
+            @RequestParam(required = false) String adresa) {
+        try {
+            beneficiarService.modificaDateBeneficiar(id, nume, prenume, telefon, adresa);
+        } catch (RuntimeException e) {
+            return "redirect:/beneficiari?error=BeneficiarInexistent";
+        }
+        return "redirect:/beneficiari";
     }
 
+    // Endpoint pentru vizualizarea unui beneficiar (HTML)
     @GetMapping("/{id}")
-    public ResponseEntity<BeneficiarDTO> vizualizeazaCont(@PathVariable Long id) {
+    public String vizualizeazaBeneficiar(@PathVariable Long id, Model model) {
         Beneficiar beneficiar = beneficiarService.vizualizeazaCont(id);
-        return ResponseEntity.ok(BeneficiarMapper.toDTO(beneficiar));
+        model.addAttribute("beneficiar", beneficiar);
+        return "vizualizare-beneficiar"; // Returnează o pagină separată pentru vizualizare
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> stergeCont(@PathVariable Long id) {
+    // Endpoint pentru ștergerea unui beneficiar (acționat din link HTML)
+    @GetMapping("/{id}/sterge")
+    public String stergeCont(@PathVariable Long id) {
         beneficiarService.stergeContBeneficiar(id);
-        return ResponseEntity.noContent().build();
-    }
-    @GetMapping("/{id}/istoric-notificari")
-    public ResponseEntity<String> getIstoricNotificari(@PathVariable Long id) {
-        String istoricNotificari = beneficiarService.getIstoricNotificariById(id);
-        return ResponseEntity.ok(istoricNotificari);
-    }
-
-    @PostMapping("/{id}/adauga-notificare")
-    public ResponseEntity<Void> adaugaNotificareLaIstoric(@PathVariable Long id, @RequestBody String notificare) {
-        beneficiarService.adaugaNotificareLaIstoric(id, notificare);
-        return ResponseEntity.ok().build();
+        return "redirect:/beneficiari"; // Redirecționează către lista beneficiarilor după ștergere
     }
 }

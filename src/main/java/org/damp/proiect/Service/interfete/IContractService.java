@@ -21,4 +21,6 @@ public interface IContractService {
     Contract getContractById(Long id);
 
     Contract creareContract(Contract contract, Long beneficiarId, Long furnizorId);
+
+    List<Contract> getAllContracts();
 }

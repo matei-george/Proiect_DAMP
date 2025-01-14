@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proiect Beneficiari</title>
+    <style>
+        /* Stiluri generale */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        header p {
+            font-size: 1.5rem;
+            margin: 10px 0 0;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            list-style: none;
+            padding: 20px 0 0;
+            margin: 0;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            background: white;
+            color: #007bff;
+        }
+        .hero {
+            background: url('/images/hero-background.jpg') no-repeat center/cover;
+            padding: 100px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .hero h2 {
+            font-size: 3rem;
+            margin: 0 0 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin: 0 0 30px;
+        }
+        .hero a {
+            background: #ff5733;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+        .hero a:hover {
+            background: #c70039;
+        }
+        .features {
+            padding: 60px 20px;
+            text-align: center;
+            background: #fff;
+        }
+        .features h2 {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 40px;
+        }
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        .feature-card h3 {
+            font-size: 1.8rem;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .feature-card a {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+        .feature-card a:hover {
+            background: #0056b3;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Proiect Beneficiari</h1>
+    <p>Transformăm gestionarea datelor într-o experiență inovatoare</p>
+    <nav>
+        <ul>
+            <li><a href="/beneficiari">Beneficiari</a></li>
+            <li><a href="/contracte">Contracte</a></li>
+            <li><a href="/notificari">Notificări</a></li>
+            <li><a href="/documente">Documente</a></li>
+            <li><a href="/rapoarte">Rapoarte</a></li>
+            <li><a href="/servicii">Servicii</a></li>
+            <li><a href="/furnizori">Furnizori</a></li>
+        </ul>
+    </nav>
+</header>
+<section class="hero">
+    <div class="hero-content">
+        <h2>Bun venit la Proiect Beneficiari</h2>
+        <p>Administrarea beneficiarilor, contractelor și furnizorilor făcută simplu și eficient.</p>
+        <a href="/beneficiari">Începe acum</a>
+    </div>
+</section>
+<section class="features">
+    <h2>Ce oferim</h2>
+    <div class="feature-list">
+        <div class="feature-card">
+            <h3>Beneficiari</h3>
+            <p>Administrează informațiile beneficiarilor simplu și rapid.</p>
+            <a href="/beneficiari">Explorați</a>
+        </div>
+        <div class="feature-card">
+            <h3>Contracte</h3>
+            <p>Gestionează toate contractele beneficiarilor într-un singur loc.</p>
+            <a href="/contracte">Explorați</a>
+        </div>
+        <div class="feature-card">
+            <h3>Notificări</h3>
+            <p>Trimite notificări importante în timp real.</p>
+            <a href="/notificari">Explorați</a>
+        </div>
+        <div class="feature-card">
+            <h3>Rapoarte</h3>
+            <p>Generează rapoarte avansate pentru analiza datelor.</p>
+            <a href="/rapoarte">Explorați</a>
+        </div>
+        <div class="feature-card">
+            <h3>Servicii</h3>
+            <p>Gestionați tipurile de servicii disponibile pentru beneficiari.</p>
+            <a href="/servicii">Explorați</a>
+        </div>
+        <div class="feature-card">
+            <h3>Furnizori</h3>
+            <p>Administrează eficient lista furnizorilor și serviciile oferite.</p>
+            <a href="/furnizori">Explorați</a>
+        </div>
+    </div>
+</section>
+<footer>
+    <p>&copy; 2025 Proiect Beneficiari. Creat cu pasiune pentru eficiență și organizare.</p>
+</footer>
+</body>
+</html>

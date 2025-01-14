@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Raport - Proiect Beneficiari</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container h2 {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .details div {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .details div span {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .details div span:last-child {
+            font-weight: normal;
+            color: #555;
+        }
+
+        .details a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .details a:hover {
+            color: #0056b3;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Detalii Raport</h2>
+    <div class="details">
+        <div>
+            <span>ID Raport:</span>
+            <span th:text="${raport.id}">ID indisponibil</span>
+        </div>
+        <div>
+            <span>Tip Raport:</span>
+            <span th:text="${raport.tipRaport}">Tip indisponibil</span>
+        </div>
+        <div>
+            <span>Interval:</span>
+            <span th:text="${raport.interval}">Interval indisponibil</span>
+        </div>
+        <div>
+            <span>Data Generare:</span>
+            <span th:text="${raport.dataGenerare}">Data indisponibilă</span>
+        </div>
+        <div>
+            <span>Document:</span>
+            <a th:href="@{/rapoarte/{id}/download(id=${raport.id})}">Descarcă Raport</a>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Proiect Beneficiari. <a href="/rapoarte">Înapoi la lista rapoartelor</a></p>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionare Notificări - Proiect Beneficiari</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            background: white;
+            color: #007bff;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        form input, form button {
+            flex: 1 1 calc(33.33% - 10px);
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        table th {
+            background: #007bff;
+            color: white;
+        }
+        table td {
+            background: #f9f9f9;
+        }
+        table td a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        table td a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestionare Notificări</h1>
+    <nav>
+        <ul>
+            <li><a href="/beneficiari">Beneficiari</a></li>
+            <li><a href="/contracte">Contracte</a></li>
+            <li><a href="/notificari">Notificări</a></li>
+            <li><a href="/documente">Documente</a></li>
+            <li><a href="/rapoarte">Rapoarte</a></li>
+            <li><a href="/servicii">Servicii</a></li>
+            <li><a href="/furnizori">Furnizori</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Adaugă Notificare</h2>
+        <form th:action="@{/notificari/creare}" method="post">
+            <input type="text" name="mesaj" placeholder="Mesaj Notificare" required>
+            <input type="date" name="dataNotificare" required>
+            <input type="text" name="stare" placeholder="Stare Notificare" required>
+            <button type="submit">Adaugă</button>
+        </form>
+    </section>
+    <section>
+        <h2>Lista Notificărilor</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Mesaj</th>
+                <th>Data</th>
+                <th>Stare</th>
+                <th>Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="notificare : ${notificari}">
+                <td th:text="${notificare.id}"></td>
+                <td th:text="${notificare.mesaj}"></td>
+                <td th:text="${notificare.dataNotificare}"></td>
+                <td th:text="${notificare.stare}"></td>
+                <td>
+                    <a th:href="@{/notificari/{id}(id=${notificare.id})}">Vizualizează</a> |
+                    <a th:href="@{/notificari/{id}/sterge(id=${notificare.id})}">Șterge</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2025 Proiect Beneficiari</p>
+</footer>
+</body>
+</html>

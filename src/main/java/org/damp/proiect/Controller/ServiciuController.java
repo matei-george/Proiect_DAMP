@@ -8,13 +8,15 @@ import org.damp.proiect.Service.interfete.IFurnizorService;
 import org.damp.proiect.Service.interfete.IServiciuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/servicii")
+@Controller
+@RequestMapping("/servicii")
 public class ServiciuController {
 
     @Autowired
@@ -23,12 +25,19 @@ public class ServiciuController {
     @Autowired
     private IFurnizorService furnizorService;
 
+    @GetMapping
+    public String serviciiPage(Model model) {
+        List<Serviciu> servicii = serviciuService.getAllServicii();
+        model.addAttribute("servicii", servicii);
+        return "servicii";
+    }
+
     @PostMapping("/adauga")
     public ResponseEntity<ServiciuDTO> adaugaServiciu(
             @RequestBody ServiciuDTO serviciuDTO,
             @RequestParam Long furnizorId
     ) {
-        Furnizor furnizor = furnizorService.getFurnizorById(furnizorId); // Obține furnizorul
+        Furnizor furnizor = furnizorService.getFurnizorById(furnizorId);
         Serviciu serviciu = ServiciuMapper.toEntity(serviciuDTO);
         serviciu.setFurnizor(furnizor);
         Serviciu createdServiciu = serviciuService.adaugaServiciu(serviciu);
@@ -36,9 +45,11 @@ public class ServiciuController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiciuDTO> getServiciuById(@PathVariable Long id) {
-        Serviciu serviciu = serviciuService.getServiciuById(id); // Adaugă această metodă dacă nu există
-        return ResponseEntity.ok(ServiciuMapper.toDTO(serviciu));
+    public String vizualizareServiciu(@PathVariable Long id, Model model) {
+        Serviciu serviciu = serviciuService.getServiciuById(id);
+        ServiciuDTO serviciuDTO = ServiciuMapper.toDTO(serviciu);
+        model.addAttribute("serviciu", serviciuDTO);
+        return "vizualizare-serviciu";
     }
 
     @GetMapping("/list")

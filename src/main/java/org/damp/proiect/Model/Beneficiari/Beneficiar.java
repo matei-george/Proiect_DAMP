@@ -61,7 +61,13 @@ public class Beneficiar {
         this.cnp = cnp;
         this.parola = parola;
     }
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public Long getIdBeneficiar() {
         return id;
     }

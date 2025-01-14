@@ -22,14 +22,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Dezactivează CSRF pentru testare
+                .csrf(csrf -> csrf.disable()) // Dezactivează protecția CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/beneficiari/**").authenticated() // Protejează endpoint-urile beneficiarilor
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(httpBasicCustomizer -> {}); // Varianta recomandată pentru autentificare HTTP Basic
-
+                        .anyRequest().permitAll() // Permite accesul la toate endpoint-urile
+                );
         return http.build();
     }
 

@@ -56,9 +56,8 @@ public class ContractService implements IContractService {
         return contractRepository.save(contract);
     }
 
-    // Obținerea tuturor contractelor
     public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
+        return contractRepository.findAll(); // Returnează toate contractele din baza de date
     }
 
     // Actualizare contract

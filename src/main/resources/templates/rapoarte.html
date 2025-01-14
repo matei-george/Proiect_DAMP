@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionare Rapoarte - Proiect Beneficiari</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            background: white;
+            color: #007bff;
+        }
+        main {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2, h3 {
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        form {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        form input, form select, form button {
+            flex: 1 1 calc(33.33% - 10px);
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+            font-size: 1rem;
+        }
+        td a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        td a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestionare Rapoarte</h1>
+    <nav>
+        <ul>
+            <li><a href="/beneficiari">Beneficiari</a></li>
+            <li><a href="/contracte">Contracte</a></li>
+            <li><a href="/notificări">Notificări</a></li>
+            <li><a href="/documente">Documente</a></li>
+            <li><a href="/rapoarte">Rapoarte</a></li>
+            <li><a href="/servicii">Servicii</a></li>
+            <li><a href="/furnizori">Furnizori</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section>
+        <h3>Generează Raport</h3>
+        <form th:action="@{/rapoarte/creare}" method="post">
+            <input type="text" name="tipRaport" placeholder="Tip Raport" required>
+            <input type="text" name="interval" placeholder="Interval (ex: 01-2025)" required>
+            <button type="submit">Generează</button>
+        </form>
+    </section>
+    <section>
+        <h2>Lista Rapoartelor</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tip Raport</th>
+                <th>Interval</th>
+                <th>Data Generare</th>
+                <th>Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="raport : ${rapoarte}">
+                <td th:text="${raport.id}"></td>
+                <td th:text="${raport.tipRaport}"></td>
+                <td th:text="${raport.interval}"></td>
+                <td th:text="${raport.dataGenerare}"></td>
+                <td>
+                    <a th:href="@{/rapoarte/{id}(id=${raport.id})}">Vizualizează</a> |
+                    <a th:href="@{/rapoarte/{id}/sterge(id=${raport.id})}">Șterge</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2025 Proiect Beneficiari</p>
+</footer>
+</body>
+</html>

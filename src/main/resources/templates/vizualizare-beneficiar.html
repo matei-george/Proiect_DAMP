@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Beneficiar - Proiect Beneficiari</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+
+        .details {
+            text-align: left;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .details p {
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        .details p strong {
+            color: #007bff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #0056b3;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Detalii Beneficiar</h1>
+    <div class="details">
+        <p><strong>ID:</strong> <span th:text="${beneficiar.idBeneficiar}">ID indisponibil</span></p>
+        <p><strong>Nume:</strong> <span th:text="${beneficiar.nume}">Nume indisponibil</span></p>
+        <p><strong>Prenume:</strong> <span th:text="${beneficiar.prenume}">Prenume indisponibil</span></p>
+        <p><strong>Email:</strong> <span th:text="${beneficiar.email}">Email indisponibil</span></p>
+        <p><strong>Telefon:</strong> <span th:text="${beneficiar.telefon}">Telefon indisponibil</span></p>
+        <p><strong>Adresa:</strong> <span th:text="${beneficiar.adresa}">Adresa indisponibilă</span></p>
+        <p><strong>CNP:</strong> <span th:text="${beneficiar.cnp}">CNP indisponibil</span></p>
+    </div>
+    <a href="/beneficiari" class="back-link">Înapoi la lista beneficiarilor</a>
+</div>
+</body>
+</html>

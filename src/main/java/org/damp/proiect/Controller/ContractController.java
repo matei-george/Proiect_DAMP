@@ -10,20 +10,22 @@ import org.damp.proiect.Repository.ContractRepository;
 import org.damp.proiect.Repository.FurnizorRepository;
 import org.damp.proiect.Service.interfete.IContractService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/contracte")
+@Controller
+@RequestMapping("/contracte")
 public class ContractController {
 
     private final BeneficiarRepository beneficiarRepository;
     private final ContractRepository contractRepository;
     private final FurnizorRepository furnizorRepository;
+
+    @Autowired
+    private IContractService contractService;
 
     @Autowired
     public ContractController(BeneficiarRepository beneficiarRepository,
@@ -34,76 +36,75 @@ public class ContractController {
         this.furnizorRepository = furnizorRepository;
     }
 
-
-    @Autowired
-    private IContractService contractService;
-
     @PostMapping("/adauga")
-    public ResponseEntity<ContractDTO> adaugaContract(@RequestBody ContractDTO contractDTO) {
-        Beneficiar beneficiar = beneficiarRepository.findById(contractDTO.getBeneficiarId())
-                .orElseThrow(() -> new RuntimeException("Beneficiar inexistent!"));
-        Furnizor furnizor = furnizorRepository.findById(contractDTO.getFurnizorId())
-                .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
+    public String adaugaContract(@RequestParam Long beneficiarId,
+                                 @RequestParam Long furnizorId,
+                                 @RequestParam String tipServiciu,
+                                 @RequestParam String dataIncepere,
+                                 @RequestParam String dataExpirare,
+                                 @RequestParam Double valoareContract,
+                                 @RequestParam String documente,
+                                 Model model) {
+        try {
+            Beneficiar beneficiar = beneficiarRepository.findById(beneficiarId)
+                    .orElseThrow(() -> new RuntimeException("Beneficiar inexistent!"));
+            Furnizor furnizor = furnizorRepository.findById(furnizorId)
+                    .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
 
-        Contract contract = ContractMapper.toEntity(contractDTO, beneficiar, furnizor); // Apel corect
-        Contract savedContract = contractRepository.save(contract);
+            ContractDTO contractDTO = new ContractDTO(null, beneficiarId, furnizorId, tipServiciu,
+                    java.sql.Date.valueOf(dataIncepere), java.sql.Date.valueOf(dataExpirare),
+                    valoareContract, documente);
+            Contract contract = ContractMapper.toEntity(contractDTO, beneficiar, furnizor);
+            contractRepository.save(contract);
 
-        return ResponseEntity.ok(ContractMapper.toDTO(savedContract));
+            model.addAttribute("successMessage", "Contractul a fost adăugat cu succes!");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Eroare la adăugarea contractului: " + e.getMessage());
+        }
+        return "redirect:/contracte";
     }
 
-    @PutMapping("/{id}/modifica")
-    public ResponseEntity<ContractDTO> modificaContract(@PathVariable Long id, @RequestBody ContractDTO contractDTO) {
-        // Obține beneficiarul
-        Beneficiar beneficiar = beneficiarRepository.findById(contractDTO.getBeneficiarId())
-                .orElseThrow(() -> new RuntimeException("Beneficiar inexistent!"));
+    @PostMapping("/{id}/modifica")
+    public String modificaContract(@PathVariable Long id,
+                                   @RequestParam Long beneficiarId,
+                                   @RequestParam Long furnizorId,
+                                   @RequestParam String tipServiciu,
+                                   @RequestParam String dataIncepere,
+                                   @RequestParam String dataExpirare,
+                                   @RequestParam Double valoareContract,
+                                   @RequestParam String documente,
+                                   Model model) {
+        try {
+            Beneficiar beneficiar = beneficiarRepository.findById(beneficiarId)
+                    .orElseThrow(() -> new RuntimeException("Beneficiar inexistent!"));
+            Furnizor furnizor = furnizorRepository.findById(furnizorId)
+                    .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
 
-        // Obține furnizorul
-        Furnizor furnizor = furnizorRepository.findById(contractDTO.getFurnizorId())
-                .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
+            ContractDTO contractDTO = new ContractDTO(id, beneficiarId, furnizorId, tipServiciu,
+                    java.sql.Date.valueOf(dataIncepere), java.sql.Date.valueOf(dataExpirare),
+                    valoareContract, documente);
+            Contract contract = ContractMapper.toEntity(contractDTO, beneficiar, furnizor);
+            contractService.modificaContract(id, contract);
 
-        // Creează entitatea Contract din DTO, Beneficiar și Furnizor
-        Contract contract = ContractMapper.toEntity(contractDTO, beneficiar, furnizor);
-
-        // Modifică contractul existent
-        Contract updatedContract = contractService.modificaContract(id, contract);
-
-        // Returnează DTO-ul contractului modificat
-        return ResponseEntity.ok(ContractMapper.toDTO(updatedContract));
+            model.addAttribute("successMessage", "Contractul a fost modificat cu succes!");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Eroare la modificarea contractului: " + e.getMessage());
+        }
+        return "redirect:/contracte";
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ContractDTO> vizualizeazaContract(@PathVariable Long id) {
+    public String vizualizeazaContract(@PathVariable Long id, Model model) {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contract inexistent!"));
-        return ResponseEntity.ok(ContractMapper.toDTO(contract));
-    }
-    @GetMapping("/active/{beneficiarId}")
-    public ResponseEntity<List<ContractDTO>> getContracteActiveByBeneficiar(@PathVariable Long beneficiarId) {
-        List<Contract> contracte = contractService.getContracteActiveByBeneficiar(beneficiarId);
-        List<ContractDTO> contracteDTO = contracte.stream()
-                .map(ContractMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(contracteDTO);
+        model.addAttribute("contract", contract);
+        return "vizualizare-contract"; // Thymeleaf va căuta vizualizare-contract.html
     }
 
-    @GetMapping("/cauta")
-    public ResponseEntity<List<ContractDTO>> cautaContracte(
-            @RequestParam(required = false) String tipServiciu,
-            @RequestParam(required = false) Long furnizorId,
-            @RequestParam(required = false) String dataIncepere
-    ) {
-        List<Contract> contracte = contractService.cautaContracte(tipServiciu, furnizorId, null);
-        List<ContractDTO> contracteDTO = contracte.stream()
-                .map(ContractMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(contracteDTO);
-    }
-
-    @DeleteMapping("/{id}/anuleaza")
-    public ResponseEntity<Void> anuleazaContract(@PathVariable Long id) {
-        Contract contract = contractRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contract inexistent!"));
-
-        contractRepository.delete(contract);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public String contractePage(Model model) {
+        List<Contract> contracte = contractService.getAllContracts();
+        model.addAttribute("contracte", contracte);
+        return "contracte"; // Thymeleaf va căuta contracte.html
     }
 }
