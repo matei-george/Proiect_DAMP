@@ -146,6 +146,8 @@
             <input type="text" name="mesaj" placeholder="Mesaj Notificare" required>
             <input type="date" name="dataNotificare" required>
             <input type="text" name="stare" placeholder="Stare Notificare" required>
+            <input type="number" name="beneficiarId" placeholder="ID Beneficiar" required>
+            <input type="number" name="contractId" placeholder="ID Contract" required>
             <button type="submit">Adaugă</button>
         </form>
     </section>
@@ -168,7 +170,6 @@
                 <td th:text="${notificare.dataNotificare}"></td>
                 <td th:text="${notificare.stare}"></td>
                 <td>
-                    <a th:href="@{/notificari/{id}(id=${notificare.id})}">Vizualizează</a> |
                     <a th:href="@{/notificari/{id}/sterge(id=${notificare.id})}">Șterge</a>
                 </td>
             </tr>

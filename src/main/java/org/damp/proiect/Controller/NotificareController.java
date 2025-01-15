@@ -2,6 +2,8 @@ package org.damp.proiect.Controller;
 
 import org.damp.proiect.DTO.NotificareDTO;
 import org.damp.proiect.DTO.NotificareMapper;
+import org.damp.proiect.Model.Beneficiari.Beneficiar;
+import org.damp.proiect.Model.Contracte.Contract;
 import org.damp.proiect.Model.Notificare.Notificare;
 import org.damp.proiect.Service.interfete.IBeneficiarService;
 import org.damp.proiect.Service.interfete.IContractService;
@@ -45,13 +47,29 @@ public class NotificareController {
             @RequestParam String mesaj,
             @RequestParam String dataNotificare,
             @RequestParam String stare,
+            @RequestParam Long beneficiarId, // ID-ul beneficiarului
+            @RequestParam Long contractId, // ID-ul contractului
             Model model
     ) {
+        // Obține obiectele beneficiar și contract asociate
+        Beneficiar beneficiar = beneficiarService.vizualizeazaCont(beneficiarId);
+        Contract contract = contractService.getContractById(contractId);
+
+        if (beneficiar == null || contract == null) {
+            // Dacă nu există beneficiar sau contract, aruncă o eroare
+            model.addAttribute("error", "Beneficiar sau contract invalid.");
+            return "notificari";
+        }
+
+        // Creare obiect notificare
         Notificare notificare = new Notificare();
         notificare.setMesaj(mesaj);
         notificare.setDataNotificare(java.sql.Date.valueOf(dataNotificare));
         notificare.setStare(stare);
+        notificare.setBeneficiar(beneficiar);
+        notificare.setContract(contract);
 
+        // Salvează notificarea
         notificareService.creareNotificare(notificare);
 
         return "redirect:/notificari"; // Reîncarcă pagina notificărilor

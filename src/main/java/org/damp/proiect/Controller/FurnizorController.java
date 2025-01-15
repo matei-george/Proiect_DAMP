@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/furnizori")
@@ -22,35 +21,43 @@ public class FurnizorController {
     @GetMapping
     public String furnizoriPage(Model model) {
         List<Furnizor> furnizori = furnizorService.getAllFurnizori();
-        if (furnizori == null) {
-            furnizori = List.of(); // Fallback pentru lista goală
-        }
+        System.out.println("Lista furnizorilor transmisă: " + furnizori);
         model.addAttribute("furnizori", furnizori);
-        return "furnizori"; // Thymeleaf va căuta furnizori.html în templates/
+        return "furnizori"; // Thymeleaf va căuta furnizori.html
     }
 
     @GetMapping("/{id}")
     public String vizualizareFurnizor(@PathVariable Long id, Model model) {
-        Furnizor furnizor = furnizorService.getFurnizorById(id);
-        if (furnizor == null) {
-            model.addAttribute("errorMessage", "Furnizorul nu a fost găsit.");
-            return "error"; // Pagina de eroare
+        try {
+            Furnizor furnizor = furnizorService.getFurnizorById(id);
+            System.out.println("Furnizor găsit: " + furnizor);
+            model.addAttribute("furnizor", FurnizorMapper.toDTO(furnizor));
+            return "vizualizare-furnizor";
+        } catch (RuntimeException ex) {
+            System.err.println("Eroare: " + ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "error";
         }
-        model.addAttribute("furnizor", FurnizorMapper.toDTO(furnizor));
-        return "vizualizare-furnizor"; // Thymeleaf va căuta vizualizare-furnizor.html
     }
 
     @PostMapping("/creare")
-    @ResponseBody
-    public FurnizorDTO creareFurnizor(@RequestBody FurnizorDTO furnizorDTO) {
-        Furnizor furnizor = FurnizorMapper.toEntity(furnizorDTO);
-        Furnizor createdFurnizor = furnizorService.creareFurnizor(furnizor);
-        return FurnizorMapper.toDTO(createdFurnizor);
+    public String creareFurnizor(
+            @RequestParam String numeFurnizor,
+            @RequestParam String tipServiciu,
+            @RequestParam(required = false) String contact,
+            Model model
+    ) {
+        // Creează și salvează un nou furnizor
+        Furnizor furnizor = new Furnizor(numeFurnizor, tipServiciu, contact);
+        furnizorService.creareFurnizor(furnizor);
+
+        // Redirecționează către lista furnizorilor
+        return "redirect:/furnizori";
     }
 
-    @DeleteMapping("/{id}/sterge")
-    @ResponseBody
-    public void stergeFurnizor(@PathVariable Long id) {
+    @PostMapping("/{id}/sterge")
+    public String stergeFurnizor(@PathVariable Long id) {
         furnizorService.stergeFurnizor(id);
+        return "redirect:/furnizori";
     }
 }

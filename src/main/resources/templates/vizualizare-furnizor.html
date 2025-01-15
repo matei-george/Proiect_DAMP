@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Furnizor - Proiect Beneficiari</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container h2 {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+            font-size: 1rem;
+        }
+
+        td {
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #0056b3;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Detalii Furnizor</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <td th:text="${furnizor.id}">ID indisponibil</td>
+        </tr>
+        <tr>
+            <th>Nume Furnizor</th>
+            <td th:text="${furnizor.numeFurnizor}">Nume indisponibil</td>
+        </tr>
+        <tr>
+            <th>Tip Serviciu</th>
+            <td th:text="${furnizor.tipServiciu}">Tip serviciu indisponibil</td>
+        </tr>
+        <tr>
+            <th>Contact</th>
+            <td th:text="${furnizor.contact}">Contact indisponibil</td>
+        </tr>
+    </table>
+    <a href="/furnizori" class="back-link">Înapoi la lista furnizorilor</a>
+</div>
+</body>
+</html>

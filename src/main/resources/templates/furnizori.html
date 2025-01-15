@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizualizare Furnizor - Proiect Beneficiari</title>
+    <title>Lista Furnizorilor - Proiect Beneficiari</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -49,7 +49,7 @@
         }
         main {
             padding: 40px 20px;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
@@ -60,34 +60,56 @@
             color: #007bff;
             margin-bottom: 20px;
         }
-        .details {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .details div {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
             background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .details div span {
-            font-weight: bold;
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
         }
-        .details div span:last-child {
-            font-weight: normal;
+        th {
+            background: #007bff;
+            color: white;
+            font-size: 1rem;
         }
-        .no-details {
-            text-align: center;
-            color: red;
-            font-size: 1.2rem;
-            font-weight: bold;
+        td {
+            background: #f9f9f9;
+            color: #333;
+        }
+        .action-links a, .action-links button {
+            color: #007bff;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .action-links a:hover, .action-links button:hover {
+            text-decoration: underline;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        form input, form button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background: #0056b3;
         }
         footer {
             background: #333;
@@ -100,7 +122,7 @@
 </head>
 <body>
 <header>
-    <h1>Vizualizare Furnizor</h1>
+    <h1>Lista Furnizorilor</h1>
     <nav>
         <ul>
             <li><a href="/beneficiari">Beneficiari</a></li>
@@ -109,32 +131,49 @@
             <li><a href="/documente">Documente</a></li>
             <li><a href="/rapoarte">Rapoarte</a></li>
             <li><a href="/servicii">Servicii</a></li>
+            <li><a href="/furnizori">Furnizori</a></li>
         </ul>
     </nav>
 </header>
 <main>
-    <h2>Detalii Furnizor</h2>
-    <div th:if="${furnizor != null}" class="details">
-        <div>
-            <span>ID Furnizor:</span>
-            <span th:text="${furnizor.id}">ID indisponibil</span>
-        </div>
-        <div>
-            <span>Nume Furnizor:</span>
-            <span th:text="${furnizor.numeFurnizor}">Nume indisponibil</span>
-        </div>
-        <div>
-            <span>Tip Serviciu:</span>
-            <span th:text="${furnizor.tipServiciu}">Tip indisponibil</span>
-        </div>
-        <div>
-            <span>Contact:</span>
-            <span th:text="${furnizor.contact}">Contact indisponibil</span>
-        </div>
-    </div>
-    <div th:if="${furnizor == null}" class="no-details">
-        <p>Detaliile furnizorului nu sunt disponibile.</p>
-    </div>
+    <h2>Adaugă un Nou Furnizor</h2>
+    <!-- Formular pentru adăugarea unui furnizor -->
+    <form th:action="@{/furnizori/creare}" method="post">
+        <input type="text" name="numeFurnizor" placeholder="Nume Furnizor" required>
+        <input type="text" name="tipServiciu" placeholder="Tip Serviciu" required>
+        <input type="text" name="contact" placeholder="Contact">
+        <button type="submit">Adaugă</button>
+    </form>
+
+    <h2>Furnizori Disponibili</h2>
+    <!-- Tabel pentru afișarea furnizorilor -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nume Furnizor</th>
+            <th>Tip Serviciu</th>
+            <th>Contact</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="furnizor : ${furnizori}">
+            <td th:text="${furnizor.id}">ID</td>
+            <td th:text="${furnizor.numeFurnizor}">Nume Furnizor</td>
+            <td th:text="${furnizor.tipServiciu}">Tip Serviciu</td>
+            <td th:text="${furnizor.contact}">Contact</td>
+            <td>
+                <form th:action="@{/furnizori/{id}/sterge(id=${furnizor.id})}" method="post" style="display:inline;">
+                    <button type="submit">Șterge</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(furnizori)}">
+            <td colspan="5" style="text-align:center;">Nu există furnizori disponibili.</td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 <footer>
     <p>&copy; 2025 Proiect Beneficiari</p>

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller // Schimbat din @RestController în @Controller
+@Controller
 @RequestMapping("/rapoarte")
 public class RaportController {
 
@@ -24,22 +26,35 @@ public class RaportController {
     public String rapoartePage(Model model) {
         List<Raport> rapoarte = raportService.getAllRapoarte();
         model.addAttribute("rapoarte", rapoarte);
-        return "rapoarte"; // Thymeleaf va căuta rapoarte.html în templates/
+        return "rapoarte"; // Returnează rapoarte.html
     }
 
     @PostMapping("/creare")
-    public ResponseEntity<RaportDTO> creareRaport(@RequestBody RaportDTO raportDTO) {
-        Raport raport = RaportMapper.toEntity(raportDTO);
-        Raport createdRaport = raportService.creareRaport(raport);
-        return ResponseEntity.ok(RaportMapper.toDTO(createdRaport));
+    public String creareRaport(
+            @RequestParam String tipRaport,
+            @RequestParam String interval,
+            Model model
+    ) {
+        byte[] document = ("Raport generat pentru tipul: " + tipRaport + " și intervalul: " + interval).getBytes();
+
+        Raport raport = new Raport();
+        raport.setTipRaport(tipRaport);
+        raport.setInterval(interval);
+        raport.setDataGenerare(LocalDate.now());
+        raport.setDocument(document);
+
+        raportService.creareRaport(raport);
+
+        return "redirect:/rapoarte"; // Redirecționează către pagina principală
     }
+
 
     @GetMapping("/{id}")
     public String vizualizareRaport(@PathVariable Long id, Model model) {
         Raport raport = raportService.getRaportById(id);
         RaportDTO raportDTO = RaportMapper.toDTO(raport);
         model.addAttribute("raport", raportDTO);
-        return "vizualizare-raport"; // Thymeleaf va căuta vizualizare-raport.html în templates/
+        return "vizualizare-raport"; // Returnează vizualizare-raport.html
     }
 
     @GetMapping("/list")
@@ -51,25 +66,9 @@ public class RaportController {
         return ResponseEntity.ok(rapoarteDTO);
     }
 
-    @DeleteMapping("/{id}/sterge")
-    public ResponseEntity<Void> stergeRaport(@PathVariable Long id) {
-        raportService.stergeRaport(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}/download")
-    public ResponseEntity<byte[]> downloadRaport(@PathVariable Long id) {
-        Raport raport = raportService.getRaportById(id); // Obține raportul după ID
-        byte[] document = raport.getDocument(); // Obține documentul sub formă de byte[]
-
-        // Verifică dacă documentul există
-        if (document == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // Creează răspunsul HTTP pentru descărcare
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=Raport-" + id + ".pdf")
-                .body(document);
+    @GetMapping("/{id}/sterge")
+    public String stergeRaport(@PathVariable Long id) {
+        raportService.stergeRaport(id); // Șterge raportul
+        return "redirect:/rapoarte"; // Redirecționează către pagina principală
     }
 }

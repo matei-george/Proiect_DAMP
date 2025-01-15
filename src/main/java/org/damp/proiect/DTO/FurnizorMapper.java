@@ -5,8 +5,10 @@ import org.damp.proiect.Model.Furnizor.Furnizor;
 
 public class FurnizorMapper {
 
-    // Conversie din Furnizor în FurnizorDTO
     public static FurnizorDTO toDTO(Furnizor furnizor) {
+        if (furnizor == null) {
+            return null;
+        }
         return new FurnizorDTO(
                 furnizor.getId(),
                 furnizor.getNumeFurnizor(),

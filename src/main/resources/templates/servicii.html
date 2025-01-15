@@ -3,107 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizualizare Serviciu - Proiect Beneficiari</title>
+    <title>Gestionare Servicii - Proiect Beneficiari</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #007bff, #6610f2);
+            background-color: #f8f9fa;
             color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
         }
-
-        .container {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            width: 100%;
+        header {
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
             text-align: center;
+            padding: 20px 0;
         }
-
-        .container h2 {
-            font-size: 2rem;
-            color: #007bff;
-            margin-bottom: 1.5rem;
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
         }
-
-        .details {
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             gap: 15px;
-            text-align: left;
         }
-
-        .details div {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-
-        .details div span {
+        nav ul li a {
+            color: white;
+            text-decoration: none;
             font-size: 1rem;
             font-weight: bold;
+            padding: 8px 15px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
         }
-
-        .details div span:last-child {
-            font-weight: normal;
-            color: #555;
-        }
-
-        .no-details {
-            font-size: 1.2rem;
-            color: red;
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        footer a {
+        nav ul li a:hover {
+            background: white;
             color: #007bff;
-            text-decoration: none;
         }
-
-        footer a:hover {
-            text-decoration: underline;
+        main {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+            font-size: 1rem;
+        }
+        td {
+            background: #f9f9f9;
+            color: #333;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        form input, form button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background: #0056b3;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Detalii Serviciu</h2>
-    <div th:if="${serviciu != null}" class="details">
-        <div>
-            <span>ID Serviciu:</span>
-            <span th:text="${serviciu.id}">ID indisponibil</span>
-        </div>
-        <div>
-            <span>Tip Serviciu:</span>
-            <span th:text="${serviciu.tipServiciu}">Tip indisponibil</span>
-        </div>
-        <div>
-            <span>Furnizor:</span>
-            <span th:text="${serviciu.furnizorId}">Furnizor indisponibil</span>
-        </div>
-    </div>
-    <div th:if="${serviciu == null}" class="no-details">
-        <p>Detaliile serviciului nu sunt disponibile.</p>
-    </div>
-    <footer>
-        <p>&copy; 2025 Proiect Beneficiari. <a href="/servicii">Înapoi la lista serviciilor</a></p>
-    </footer>
-</div>
+<header>
+    <h1>Gestionare Servicii</h1>
+    <nav>
+        <ul>
+            <li><a href="/beneficiari">Beneficiari</a></li>
+            <li><a href="/contracte">Contracte</a></li>
+            <li><a href="/notificari">Notificări</a></li>
+            <li><a href="/documente">Documente</a></li>
+            <li><a href="/rapoarte">Rapoarte</a></li>
+            <li><a href="/servicii">Servicii</a></li>
+            <li><a href="/furnizori">Furnizori</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <h2>Adaugă un Serviciu Nou</h2>
+    <!-- Formular pentru adăugarea unui serviciu -->
+    <form th:action="@{/servicii/adauga}" method="post">
+        <input type="text" name="tipServiciu" placeholder="Tip Serviciu" required>
+        <input type="number" name="furnizorId" placeholder="ID Furnizor" required>
+        <button type="submit">Adaugă Serviciu</button>
+    </form>
+
+    <h2>Lista Serviciilor</h2>
+    <!-- Tabel pentru afișarea serviciilor -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID Serviciu</th>
+            <th>Tip Serviciu</th>
+            <th>ID Furnizor</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="serviciu : ${servicii}">
+            <td th:text="${serviciu.id}">ID</td>
+            <td th:text="${serviciu.tipServiciu}">Tip Serviciu</td>
+            <td th:text="${serviciu.furnizor.numeFurnizor}">Furnizor</td>
+            <td>
+                <form th:action="@{/servicii/{id}/sterge(id=${serviciu.id})}" method="post" style="display:inline;">
+                    <button type="submit">Șterge</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer>
+    <p>&copy; 2025 Proiect Beneficiari</p>
+</footer>
 </body>
 </html>

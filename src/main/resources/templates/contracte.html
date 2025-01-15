@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionare Contracte - Proiect Beneficiari</title>
     <style>
+        /* Stiluri Generale */
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
@@ -15,51 +16,54 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
         header {
             background: linear-gradient(to right, #007bff, #6610f2);
             color: white;
             text-align: center;
             padding: 20px 0;
         }
-        header h1 {
-            font-size: 2.5rem;
-            margin: 0;
-        }
+
         nav ul {
             list-style: none;
-            padding: 0;
-            margin: 10px 0 0;
             display: flex;
             justify-content: center;
             gap: 15px;
+            padding: 0;
+            margin: 10px 0 0;
         }
+
         nav ul li a {
             color: white;
             text-decoration: none;
-            font-size: 1rem;
             font-weight: bold;
             padding: 8px 15px;
             border: 2px solid white;
             border-radius: 5px;
             transition: all 0.3s ease;
         }
+
         nav ul li a:hover {
             background: white;
             color: #007bff;
         }
+
         main {
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         section {
             margin-bottom: 40px;
         }
+
         h2, h3 {
             color: #007bff;
             margin-bottom: 20px;
             text-align: center;
         }
+
         form {
             background: white;
             border-radius: 8px;
@@ -69,6 +73,7 @@
             flex-wrap: wrap;
             gap: 15px;
         }
+
         form input, form button {
             flex: 1 1 calc(33.33% - 10px);
             min-width: 200px;
@@ -76,6 +81,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         form button {
             background: #007bff;
             color: white;
@@ -84,41 +90,44 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
+
         form button:hover {
             background: #0056b3;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
         }
+
         th, td {
             padding: 15px;
             border-bottom: 1px solid #ddd;
             text-align: center;
         }
+
         th {
             background: #007bff;
             color: white;
-            font-size: 1rem;
         }
+
         td a {
             color: #007bff;
             text-decoration: none;
             font-weight: bold;
         }
+
         td a:hover {
             text-decoration: underline;
         }
+
         footer {
             background: #333;
             color: white;
             text-align: center;
             padding: 15px;
-            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -138,6 +147,7 @@
     </nav>
 </header>
 <main>
+    <!-- Formular pentru adăugare contract -->
     <section>
         <h3>Adaugă Contract</h3>
         <form th:action="@{/contracte/adauga}" method="post">
@@ -151,20 +161,8 @@
             <button type="submit">Adaugă Contract</button>
         </form>
     </section>
-    <section>
-        <h3>Modifică Contract</h3>
-        <form th:action="@{/contracte/{id}/modifica}" method="post">
-            <input type="number" name="id" placeholder="ID Contract" required>
-            <input type="number" name="beneficiarId" placeholder="ID Beneficiar">
-            <input type="number" name="furnizorId" placeholder="ID Furnizor">
-            <input type="text" name="tipServiciu" placeholder="Tip Serviciu">
-            <input type="date" name="dataIncepere" placeholder="Data Începere">
-            <input type="date" name="dataExpirare" placeholder="Data Expirare">
-            <input type="number" name="valoareContract" step="0.01" placeholder="Valoare Contract">
-            <input type="text" name="documente" placeholder="Documente">
-            <button type="submit">Modifică Contract</button>
-        </form>
-    </section>
+
+    <!-- Tabel pentru lista contractelor -->
     <section>
         <h2>Lista Contractelor</h2>
         <table>
@@ -180,6 +178,7 @@
             </tr>
             </thead>
             <tbody>
+            <!-- Afișare contracte -->
             <tr th:each="contract : ${contracte}">
                 <td th:text="${contract.id}"></td>
                 <td th:text="${contract.beneficiar.nume}"></td>
@@ -189,7 +188,10 @@
                 <td th:text="${contract.dataExpirare}"></td>
                 <td>
                     <a th:href="@{/contracte/{id}(id=${contract.id})}">Vizualizează</a> |
-                    <a th:href="@{/contracte/{id}/anuleaza(id=${contract.id})}">Anulează</a>
+                    <a th:href="@{/contracte/{id}/modifica(id=${contract.id})}">Editează</a> |
+                    <form th:action="@{/contracte/{id}/anuleaza(id=${contract.id})}" method="post" style="display:inline;">
+                        <button type="submit" style="background:none; color:#007bff; border:none; cursor:pointer;">Anulează</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

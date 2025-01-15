@@ -15,29 +15,28 @@ public class FurnizorService implements IFurnizorService {
     @Autowired
     private FurnizorRepository furnizorRepository;
 
-    // Creare furnizor
     @Transactional
     public Furnizor creareFurnizor(Furnizor furnizor) {
         return furnizorRepository.save(furnizor);
     }
 
-    // Obținerea furnizorului după ID
     public Furnizor getFurnizorById(Long id) {
-        return furnizorRepository.findById(id).orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
+        return furnizorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Furnizorul cu ID-ul " + id + " nu există!"));
     }
 
-    // Obținerea tuturor furnizorilor
     public List<Furnizor> getAllFurnizori() {
-        return furnizorRepository.findAll();
+        List<Furnizor> furnizori = furnizorRepository.findAll();
+        System.out.println("Furnizori găsiți: " + furnizori);
+        return furnizori;
     }
 
-    // Ștergere furnizor
     @Transactional
     public void stergeFurnizor(Long id) {
         if (furnizorRepository.existsById(id)) {
             furnizorRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Furnizor inexistent!");
+            throw new RuntimeException("Furnizorul cu ID-ul " + id + " nu există!");
         }
     }
 }

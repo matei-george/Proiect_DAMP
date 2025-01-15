@@ -3,7 +3,9 @@ package org.damp.proiect.Controller;
 import org.damp.proiect.DTO.DocumentDTO;
 import org.damp.proiect.DTO.DocumentMapper;
 import org.damp.proiect.Model.Beneficiari.Beneficiar;
+import org.damp.proiect.Model.Contracte.Contract;
 import org.damp.proiect.Model.Document.Document;
+import org.damp.proiect.Service.interfete.IContractService;
 import org.damp.proiect.Service.interfete.IDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +13,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller // Schimbat din @RestController în @Controller
+@Controller
 @RequestMapping("/documente")
 public class DocumentController {
 
     @Autowired
     private IDocumentService documentService;
+
+    @Autowired
+    private IContractService contractService; // Injectarea serviciului IContractService
 
     @GetMapping
     public String documentePage(Model model) {
@@ -27,11 +33,33 @@ public class DocumentController {
         model.addAttribute("documente", documente);
         return "documente"; // Returnează documente.html
     }
+
     @PostMapping("/creare")
-    public ResponseEntity<DocumentDTO> creareDocument(@RequestBody DocumentDTO documentDTO) {
-        Document document = DocumentMapper.toEntity(documentDTO);
-        Document createdDocument = documentService.creareDocument(document);
-        return ResponseEntity.ok(DocumentMapper.toDTO(createdDocument));
+    public String creareDocument(
+            @RequestParam String numeDocument,
+            @RequestParam String dataIncarcare,
+            @RequestParam String tip,
+            @RequestParam Long contractId, // ID-ul contractului
+            Model model
+    ) {
+        // Validare contract
+        Contract contract = contractService.getContractById(contractId);
+        if (contract == null) {
+            model.addAttribute("error", "Contract invalid!");
+            return "documente";
+        }
+
+        // Creare obiect Document
+        Document document = new Document();
+        document.setNumeDocument(numeDocument);
+        document.setDataIncarcare(Date.valueOf(dataIncarcare).toLocalDate());
+        document.setTip(tip);
+        document.setContract(contract);
+
+        // Salvare document
+        documentService.creareDocument(document);
+
+        return "redirect:/documente"; // Redirecționează către pagina de documente
     }
 
     @GetMapping("/{id}")
@@ -49,10 +77,9 @@ public class DocumentController {
         return ResponseEntity.ok(documenteDTO);
     }
 
-    @DeleteMapping("/{id}/sterge")
-    public ResponseEntity<Void> stergeDocument(@PathVariable Long id) {
-        documentService.stergeDocument(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}/sterge")
+    public String stergeDocument(@PathVariable Long id) {
+        documentService.stergeDocument(id); // Șterge documentul
+        return "redirect:/documente"; // Redirecționează către pagina documentelor
     }
-
 }

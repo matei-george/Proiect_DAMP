@@ -80,12 +80,17 @@ public class ContractController {
             Furnizor furnizor = furnizorRepository.findById(furnizorId)
                     .orElseThrow(() -> new RuntimeException("Furnizor inexistent!"));
 
-            ContractDTO contractDTO = new ContractDTO(id, beneficiarId, furnizorId, tipServiciu,
-                    java.sql.Date.valueOf(dataIncepere), java.sql.Date.valueOf(dataExpirare),
-                    valoareContract, documente);
-            Contract contract = ContractMapper.toEntity(contractDTO, beneficiar, furnizor);
-            contractService.modificaContract(id, contract);
+            Contract contract = contractRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Contract inexistent!"));
+            contract.setTipServiciu(tipServiciu);
+            contract.setDataIncepere(java.sql.Date.valueOf(dataIncepere));
+            contract.setDataExpirare(java.sql.Date.valueOf(dataExpirare));
+            contract.setValoareContract(valoareContract);
+            contract.setDocumente(documente);
+            contract.setBeneficiar(beneficiar);
+            contract.setFurnizor(furnizor);
 
+            contractRepository.save(contract);
             model.addAttribute("successMessage", "Contractul a fost modificat cu succes!");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Eroare la modificarea contractului: " + e.getMessage());
@@ -100,11 +105,35 @@ public class ContractController {
         model.addAttribute("contract", contract);
         return "vizualizare-contract"; // Thymeleaf va căuta vizualizare-contract.html
     }
+    @GetMapping("/{id}/modifica")
+    public String preiaContractPentruModificare(@PathVariable Long id, Model model) {
+        Contract contract = contractRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contractul cu ID-ul " + id + " nu există!"));
+        System.out.println("Contract returnat: " + contract);
+        model.addAttribute("contract", contract);
+        return "contracte"; // Thymeleaf va încărca templates/contracte.html
+    }
 
+    @PostMapping("/{id}/anuleaza")
+    public String anuleazaContract(@PathVariable Long id, Model model) {
+        try {
+            Contract contract = contractRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Contract inexistent!"));
+            contractRepository.delete(contract);
+
+            model.addAttribute("successMessage", "Contractul a fost anulat cu succes!");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Eroare la anularea contractului: " + e.getMessage());
+        }
+        return "redirect:/contracte";
+    }
     @GetMapping
     public String contractePage(Model model) {
         List<Contract> contracte = contractService.getAllContracts();
+        if (contracte == null || contracte.isEmpty()) {
+            model.addAttribute("message", "Nu există contracte disponibile.");
+        }
         model.addAttribute("contracte", contracte);
-        return "contracte"; // Thymeleaf va căuta contracte.html
+        return "contracte"; // Thymeleaf va căuta templates/contracte.html
     }
 }

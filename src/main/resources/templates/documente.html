@@ -144,6 +144,7 @@
             <input type="text" name="numeDocument" placeholder="Nume Document" required>
             <input type="date" name="dataIncarcare" placeholder="Data Încărcare" required>
             <input type="text" name="tip" placeholder="Tip Document" required>
+            <input type="number" name="contractId" placeholder="ID Contract" required>
             <button type="submit">Adaugă Document</button>
         </form>
     </section>
@@ -166,7 +167,6 @@
                 <td th:text="${document.dataIncarcare}"></td>
                 <td th:text="${document.tip}"></td>
                 <td>
-                    <a th:href="@{/documente/{id}(id=${document.id})}">Vizualizează</a> |
                     <a th:href="@{/documente/{id}/sterge(id=${document.id})}">Șterge</a>
                 </td>
             </tr>
